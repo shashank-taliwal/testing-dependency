@@ -1,0 +1,113 @@
+resources:
+  - name: dependencyModePropertyBag
+    type: PropertyBag
+    configuration:
+      runNumber: 0
+
+pipelines:
+  - name: WCC
+    configuration:
+      dependencyMode:
+        waitOnChildComplete: true
+    steps:  
+      - name: step1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "Step1 execution of waitOnChildComplete pipeline. It will sleep for 2 minutes"
+            - sleep 2m
+      - name: step2
+        type: Bash
+        configuration:
+          outputResources:
+            - name: dependencyModePropertyBag
+          inputSteps:
+            - name: step1
+        execution:
+          onExecute:
+            - write_output dependencyModePropertyBag runNumber=${run_number}
+      - name: step3
+        type: Bash
+        configuration:
+          outputResources:
+            - name: dependencyModePropertyBag
+          inputSteps:
+            - name: step1
+        execution:
+          onExecute:
+            - write_output dependencyModePropertyBag runNumber=${run_number}
+      - name: step4
+        type: Bash
+        configuration:
+          outputResources:
+            - name: dependencyModePropertyBag
+          inputSteps:
+            - name: step1
+        execution:
+          onExecute:
+            - write_output dependencyModePropertyBag runNumber=${run_number}
+      - name: step5
+        type: Bash
+        configuration:
+          outputResources:
+            - name: dependencyModePropertyBag
+          inputSteps:
+            - name: step1
+        execution:
+          onExecute:
+            - write_output dependencyModePropertyBag runNumber=${run_number}
+            
+  - name: WPC
+    configuration: 
+      dependencyMode:
+        waitOnParentComplete: true
+    steps:  
+      - name: step1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: dependencyModePropertyBag
+        execution:
+          onExecute:
+            - echo ${res_dependencyModePropertyBag_runNumber}
+            - sleep 1m
+      - name: step2
+        type: Bash
+        configuration: 
+          inputSteps:
+            - name: step1
+        execution:
+          onExecute:
+            - echo "step2 of WPC"
+      - name: step3
+        type: Bash
+        configuration: 
+          inputSteps:
+            - name: step1
+        execution:
+          onExecute:
+            - echo "step3 of WPC"
+      - name: step4
+        type: Bash
+        configuration: 
+          inputSteps:
+            - name: step1
+        execution:
+          onExecute:
+            - echo "step4 of WPC"
+      - name: step5
+        type: Bash
+        configuration: 
+          inputSteps:
+            - name: step1
+        execution:
+          onExecute:
+            - echo "step5 of WPC"
+      - name: step6
+        type: Bash
+        configuration: 
+          inputSteps:
+            - name: step1
+        execution:
+          onExecute:
+            - echo "step6 of WPC"
